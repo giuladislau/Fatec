@@ -2,10 +2,12 @@
 #include <stdio.h> 
 #include <limits.h>
 
+//Thiago Lorena e Giullia Ladislau
+
     // Código feito para ler 1000 números e imprimir qual maior, usei a biblioteca <limits.h> para conseguir colocar
     //o INT_MIN que é o menor número inteiro possível, para ele conseguir imprimir o maior corretamente caso seja inse-
     //rido números negativos.
-
+    
 int main(){
     //Aqui nós declaramos nossas duas variáveis, uma delas com o menor valor possível com o "INT_MIN" 
     //para não dar erro se caso usarmos valores negativos. 
