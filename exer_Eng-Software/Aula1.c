@@ -1,3 +1,4 @@
+//Thiago Lorena e Giullia Ladislau
 #include <stdio.h> 
 #include <limits.h>
 
@@ -25,6 +26,5 @@ int main(){
     }
     // Aqui vemos o maior número inserido pelo usuário.
     printf("O maior número é o: %d \n", maior);
-        
     return 0;
 }
