@@ -1,4 +1,3 @@
-//Thiago Lorena e Giullia Ladislau
 #include <stdio.h> 
 #include <limits.h>
 
