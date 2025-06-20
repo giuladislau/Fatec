@@ -20,5 +20,5 @@ const ordemCrescente = [...numeros].sort((a, b) => a - b);
 const ordemDecrescente = [...ordemCrescente].reverse();
 
 // exibe o resultado com uma quebra de linha entre as saídas
-console.log("Números em ordem crescente: " + ordemCrescente.join(", "));
-console.log("\nNúmeros em ordem decrescente: " + ordemDecrescente.join(", "));
+console.log("Números em ordem crescente: " + ordemCrescente);
+console.log("\nNúmeros em ordem decrescente: " + ordemDecrescente);
