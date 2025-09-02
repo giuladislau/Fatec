@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Moedas</title>
+    <style>
+        /* estilo basico para deixar o conversor mais apresentavel */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitulo {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        .campo {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+            font-size: 16px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 18px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+        
+        .moedas-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .moeda-opcao {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: #fafafa;
+        }
+        
+        .moeda-opcao:hover {
+            border-color: #667eea;
+            background-color: #f0f4ff;
+        }
+        
+        .moeda-opcao input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        
+        .moeda-opcao input[type="checkbox"]:checked + .moeda-info {
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .bandeira {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+        
+        .botao-converter {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            font-weight: bold;
+        }
+        
+        .botao-converter:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .erro {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+            padding: 10px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+        }
+        
+        .info-cotacao {
+            background-color: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .info-cotacao h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        
+        .info-cotacao p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1> Conversor de Moedas</h1>
+        <p class="subtitulo">Converta seus reais para outras moedas</p>
+        
+        <!-- formulario que vai enviar os dados para o arquivo php -->
+        <form id="formConversor" method="POST" action="conversor.php">
+            
+            <!-- campo para digitar o valor em reais -->
+            <div class="campo">
+                <label for="valor_real"> Valor em Reais (R$):</label>
+                <input type="text" id="valor_real" name="valor_real" placeholder="Ex: 100.00">
+                <div class="erro" id="erro_valor">por favor, digite um valor numérico válido maior que zero</div>
+            </div>
+            
+            <!-- opcoes de moedas para conversao -->
+            <div class="campo">
+                <label> Selecione as moedas para conversão:</label>
+                
+                <div class="moedas-container">
+                    <!-- opcao dolar americano -->
+                    <div class="moeda-opcao">
+                        <input type="checkbox" id="dolar" name="moedas[]" value="dolar">
+                        <div class="moeda-info">
+                            <span class="bandeira">🇺🇸</span>
+                            <span>Dólar (USD)</span>
+                        </div>
+                    </div>
+                    
+                    <!-- opcao euro -->
+                    <div class="moeda-opcao">
+                        <input type="checkbox" id="euro" name="moedas[]" value="euro">
+                        <div class="moeda-info">
+                            <span class="bandeira">🇪🇺</span>
+                            <span>Euro (EUR)</span>
+                        </div>
+                    </div>
+                    
+                    <!-- opcao libra esterlina -->
+                    <div class="moeda-opcao">
+                        <input type="checkbox" id="libra" name="moedas[]" value="libra">
+                        <div class="moeda-info">
+                            <span class="bandeira">🇬🇧</span>
+                            <span>Libra (GBP)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="erro" id="erro_moedas">por favor, selecione pelo menos uma moeda para conversão</div>
+            </div>
+            
+            <!-- botao para converter -->
+            <button type="submit" class="botao-converter"> Converter Agora</button>
+        </form>
+        
+    </div>
+
+    <script>
+        // pega o formulario pelo id
+        const formulario = document.getElementById('formConversor');
+        
+        // adiciona um evento para quando o formulario for enviado
+        formulario.addEventListener('submit', function(evento) {
+            // impede o envio automatico do formulario para fazer a validacao primeiro
+            evento.preventDefault();
+            
+            // pega o valor digitado no campo
+            const valorReal = document.getElementById('valor_real').value;
+            
+            // pega todas as moedas selecionadas
+            const moedasSelecionadas = document.querySelectorAll('input[name="moedas[]"]:checked');
+            
+            // chama a funcao para validar os dados
+            if (validarDados(valorReal, moedasSelecionadas)) {
+                // se os dados estao validos, envia o formulario
+                formulario.submit();
+            }
+        });
+        
+        // funcao para validar os dados do formulario
+        function validarDados(valor, moedas) {
+            let dadosValidos = true;
+            
+            // esconde todas as mensagens de erro primeiro
+            document.getElementById('erro_valor').style.display = 'none';
+            document.getElementById('erro_moedas').style.display = 'none';
+            
+            // verifica se o valor em reais e valido
+            if (!ehNumeroValido(valor)) {
+                document.getElementById('erro_valor').style.display = 'block';
+                dadosValidos = false;
+            }
+            
+            // verifica se pelo menos uma moeda foi selecionada
+            if (moedas.length === 0) {
+                document.getElementById('erro_moedas').style.display = 'block';
+                dadosValidos = false;
+            }
+            
+            // retorna true se tudo esta valido, false se algo esta errado
+            return dadosValidos;
+        }
+        
+        // funcao para verificar se um valor e um numero valido
+        function ehNumeroValido(valor) {
+            // remove espacos em branco
+            valor = valor.trim();
+            
+            // verifica se nao esta vazio e se e um numero maior que zero
+            if (valor === '' || isNaN(valor) || parseFloat(valor) <= 0) {
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // adiciona efeito visual ao clicar nas opcoes de moeda
+        const opcoesModeda = document.querySelectorAll('.moeda-opcao');
+        opcoesModeda.forEach(opcao => {
+            opcao.addEventListener('click', function() {
+                // pega o checkbox dentro dessa opcao
+                const checkbox = this.querySelector('input[type="checkbox"]');
+                // inverte o estado do checkbox
+                checkbox.checked = !checkbox.checked;
+            });
+        });
+    </script>
+</body>
+</html>

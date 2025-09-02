@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Avaliação do Aluno</title>
+    <style>
+        /* estilo basico para o sistema de avaliacao */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .campo {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        input[type="text"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        
+        .botao-calcular {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .botao-calcular:hover {
+            background-color: #45a049;
+        }
+        
+        .erro {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .instrucoes {
+            background-color: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196F3;
+        }
+        
+        .instrucoes h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        
+        .instrucoes ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .instrucoes li {
+            margin: 5px 0;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sistema de Avaliação do Aluno</h1>
+        
+        <!-- instrucoes sobre os criterios de avaliacao -->
+        <div class="instrucoes">
+            <h3>Critérios de Avaliação:</h3>
+            <ul>
+                <li>Aprovado: média >= 6 e frequência >= 75%</li>
+                <li>Reprovado por frequência: média >= 6 e frequência < 75%</li>
+                <li>Reprovado por nota: média < 6 e frequência >= 75%</li>
+                <li>Reprovado por nota e frequência: média < 6 e frequência < 75%</li>
+            </ul>
+            <p><strong>Fórmula da Média:</strong> ((P1+AI1) + (P2+AI2))/2</p>
+        </div>
+        
+        <!-- formulario que vai enviar os dados para o arquivo php -->
+        <form id="formAvaliacao" method="POST" action="avaliacao.php">
+            
+            <!-- campo para a primeira prova -->
+            <div class="campo">
+                <label for="p1">Primeira Prova (P1):</label>
+                <input type="text" id="p1" name="p1" placeholder="Ex: 7.5">
+                <div class="erro" id="erro_p1">por favor, digite uma nota válida entre 0 e 10</div>
+            </div>
+            
+            <!-- campo para a avaliacao interdisciplinar 1 -->
+            <div class="campo">
+                <label for="ai1">Avaliação Interdisciplinar I (AI I):</label>
+                <input type="text" id="ai1" name="ai1" placeholder="Ex: 8.0">
+                <div class="erro" id="erro_ai1">por favor, digite uma nota válida entre 0 e 10</div>
+            </div>
+            
+            <!-- campo para a segunda prova -->
+            <div class="campo">
+                <label for="p2">Segunda Prova (P2):</label>
+                <input type="text" id="p2" name="p2" placeholder="Ex: 6.5">
+                <div class="erro" id="erro_p2">por favor, digite uma nota válida entre 0 e 10</div>
+            </div>
+            
+            <!-- campo para a avaliacao interdisciplinar 2 -->
+            <div class="campo">
+                <label for="ai2">Avaliação Interdisciplinar II (AI II):</label>
+                <input type="text" id="ai2" name="ai2" placeholder="Ex: 7.0">
+                <div class="erro" id="erro_ai2">por favor, digite uma nota válida entre 0 e 10</div>
+            </div>
+            
+            <!-- campo para a frequencia -->
+            <div class="campo">
+                <label for="frequencia">Frequência (0 a 100%):</label>
+                <input type="text" id="frequencia" name="frequencia" placeholder="Ex: 85">
+                <div class="erro" id="erro_frequencia">por favor, digite uma frequência válida entre 0 e 100</div>
+            </div>
+            
+            <!-- botao para calcular -->
+            <button type="submit" class="botao-calcular">Calcular Situação Final</button>
+        </form>
+    </div>
+
+    <script>
+        // pega o formulario pelo id
+        const formulario = document.getElementById('formAvaliacao');
+        
+        // adiciona um evento para quando o formulario for enviado
+        formulario.addEventListener('submit', function(evento) {
+            // impede o envio automatico do formulario para fazer a validacao primeiro
+            evento.preventDefault();
+            
+            // pega os valores digitados nos campos
+            const p1 = document.getElementById('p1').value;
+            const ai1 = document.getElementById('ai1').value;
+            const p2 = document.getElementById('p2').value;
+            const ai2 = document.getElementById('ai2').value;
+            const frequencia = document.getElementById('frequencia').value;
+            
+            // chama a funcao para validar os dados
+            if (validarDados(p1, ai1, p2, ai2, frequencia)) {
+                // se os dados estao validos, envia o formulario
+                formulario.submit();
+            }
+        });
+        
+        // funcao para validar se os valores digitados sao validos
+        function validarDados(p1, ai1, p2, ai2, frequencia) {
+            let dadosValidos = true;
+            
+            // esconde todas as mensagens de erro primeiro
+            document.getElementById('erro_p1').style.display = 'none';
+            document.getElementById('erro_ai1').style.display = 'none';
+            document.getElementById('erro_p2').style.display = 'none';
+            document.getElementById('erro_ai2').style.display = 'none';
+            document.getElementById('erro_frequencia').style.display = 'none';
+            
+            // verifica se p1 e uma nota valida
+            if (!ehNotaValida(p1)) {
+                document.getElementById('erro_p1').style.display = 'block';
+                dadosValidos = false;
+            }
+            
+            // verifica se ai1 e uma nota valida
+            if (!ehNotaValida(ai1)) {
+                document.getElementById('erro_ai1').style.display = 'block';
+                dadosValidos = false;
+            }
+            
+            // verifica se p2 e uma nota valida
+            if (!ehNotaValida(p2)) {
+                document.getElementById('erro_p2').style.display = 'block';
+                dadosValidos = false;
+            }
+            
+            // verifica se ai2 e uma nota valida
+            if (!ehNotaValida(ai2)) {
+                document.getElementById('erro_ai2').style.display = 'block';
+                dadosValidos = false;
+            }
+            
+            // verifica se a frequencia e valida
+            if (!ehFrequenciaValida(frequencia)) {
+                document.getElementById('erro_frequencia').style.display = 'block';
+                dadosValidos = false;
+            }
+            
+            // retorna true se todos os valores sao validos, false se algum nao e
+            return dadosValidos;
+        }
+        
+        // funcao para verificar se uma nota e valida (entre 0 e 10)
+        function ehNotaValida(nota) {
+            // remove espacos em branco
+            nota = nota.trim();
+            
+            // verifica se nao esta vazio, se e um numero e se esta entre 0 e 10
+            if (nota === '' || isNaN(nota) || parseFloat(nota) < 0 || parseFloat(nota) > 10) {
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // funcao para verificar se uma frequencia e valida (entre 0 e 100)
+        function ehFrequenciaValida(frequencia) {
+            // remove espacos em branco
+            frequencia = frequencia.trim();
+            
+            // verifica se nao esta vazio, se e um numero e se esta entre 0 e 100
+            if (frequencia === '' || isNaN(frequencia) || parseFloat(frequencia) < 0 || parseFloat(frequencia) > 100) {
+                return false;
+            }
+            
+            return true;
+        }
+    </script>
+</body>
+</html>

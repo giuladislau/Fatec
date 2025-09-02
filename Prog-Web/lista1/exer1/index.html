@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Combustível</title>
+    <style>
+        /* estilo basico para deixar a calculadora mais apresentavel */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .campo {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        input[type="text"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        
+        .botao-calcular {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .botao-calcular:hover {
+            background-color: #45a049;
+        }
+        
+        .erro {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .resultado {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .resultado.alcool {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .resultado.gasolina {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1> Calculadora de Combustível</h1>
+        
+        <!-- formulario que vai enviar os dados para o arquivo php -->
+        <form id="formCalculadora" method="POST" action="calculadora.php">
+            
+            <!-- campo para digitar o preco do alcool -->
+            <div class="campo">
+                <label for="preco_alcool">Preço do Álcool (por litro):</label>
+                <input type="text" id="preco_alcool" name="preco_alcool" placeholder="Ex: 3.50">
+                <div class="erro" id="erro_alcool">por favor, digite um valor numérico válido para o álcool</div>
+            </div>
+            
+            <!-- campo para digitar o preco da gasolina -->
+            <div class="campo">
+                <label for="preco_gasolina">Preço da Gasolina (por litro):</label>
+                <input type="text" id="preco_gasolina" name="preco_gasolina" placeholder="Ex: 5.20">
+                <div class="erro" id="erro_gasolina">por favor, digite um valor numérico válido para a gasolina</div>
+            </div>
+            
+            <!-- botao para calcular -->
+            <button type="submit" class="botao-calcular">Calcular Melhor Opção</button>
+        </form>
+        
+        <!-- div onde vai aparecer o resultado quando voltar do php -->
+        <div class="resultado" id="resultado"></div>
+    </div>
+
+    <script>
+        // pega o formulario pelo id
+        const formulario = document.getElementById('formCalculadora');
+        
+        // adiciona um evento para quando o formulario for enviado
+        formulario.addEventListener('submit', function(evento) {
+            // impede o envio automatico do formulario para fazer a validacao primeiro
+            evento.preventDefault();
+            
+            // pega os valores digitados nos campos
+            const precoAlcool = document.getElementById('preco_alcool').value;
+            const precoGasolina = document.getElementById('preco_gasolina').value;
+            
+            // chama a funcao para validar os dados
+            if (validarDados(precoAlcool, precoGasolina)) {
+                // se os dados estao validos, envia o formulario
+                formulario.submit();
+            }
+        });
+        
+        // funcao para validar se os valores digitados sao numericos
+        function validarDados(alcool, gasolina) {
+            let dadosValidos = true;
+            
+            // esconde todas as mensagens de erro primeiro
+            document.getElementById('erro_alcool').style.display = 'none';
+            document.getElementById('erro_gasolina').style.display = 'none';
+            
+            // verifica se o preco do alcool e um numero valido
+            if (!ehNumeroValido(alcool)) {
+                document.getElementById('erro_alcool').style.display = 'block';
+                dadosValidos = false;
+            }
+            
+            // verifica se o preco da gasolina e um numero valido
+            if (!ehNumeroValido(gasolina)) {
+                document.getElementById('erro_gasolina').style.display = 'block';
+                dadosValidos = false;
+            }
+            
+            // retorna true se ambos os valores sao validos, false se algum nao e
+            return dadosValidos;
+        }
+        
+        // funcao para verificar se um valor e um numero valido
+        function ehNumeroValido(valor) {
+            // remove espacos em branco
+            valor = valor.trim();
+            
+            // verifica se nao esta vazio e se e um numero maior que zero
+            if (valor === '' || isNaN(valor) || parseFloat(valor) <= 0) {
+                return false;
+            }
+            
+            return true;
+        }
+    </script>
+</body>
+</html>
