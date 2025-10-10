@@ -39,6 +39,6 @@
         <input type="submit" value="Inscrever-se">
     </form>
     
-    <?php}?> 
+    <?php }?> 
 </body>
 </html>

@@ -1,4 +1,4 @@
-import java.util.Scanner;
+import java.util.ArrayList;
 
 class Pilha<T> {
     private ArrayList<T> elementos;
