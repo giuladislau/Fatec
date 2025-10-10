@@ -1,8 +1,8 @@
 <?php
 $host = 'localhost';
 $dbname = 'cadastro_clientes';
-$username = 'root';
-$password = '';
+$username = 'rootM';
+$password = 'm3u4Mor@y';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
@@ -123,6 +123,10 @@ if ($acao == 'listar') {
     $clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1940775 (Adicionando index.php com crud)
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
