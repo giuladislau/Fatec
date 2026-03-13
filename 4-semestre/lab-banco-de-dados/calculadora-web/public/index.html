@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Calculadora Web</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="header">
+				<h1>Calculadora</h1>
+				<p>As 4 operações matemáticas</p>
+			</div>
+
+			<div class="calculadora">
+				<div class="operacao-atual" id="operacao-atual"></div>
+				<div class="display" id="display">0</div>
+
+				<div class="botoes">
+					<button class="btn btn-funcao" onclick="limpar()">C</button>
+					<button class="btn btn-funcao" onclick="apagarUltimo()">⌫</button>
+					<button class="btn btn-funcao" onclick="alternarSinal()">±</button>
+					<button class="btn btn-operador" onclick="definirOperacao('/')">÷</button>
+
+					<button class="btn" onclick="adicionarNumero('7')">7</button>
+					<button class="btn" onclick="adicionarNumero('8')">8</button>
+					<button class="btn" onclick="adicionarNumero('9')">9</button>
+					<button class="btn btn-operador" onclick="definirOperacao('*')">×</button>
+
+					<button class="btn" onclick="adicionarNumero('4')">4</button>
+					<button class="btn" onclick="adicionarNumero('5')">5</button>
+					<button class="btn" onclick="adicionarNumero('6')">6</button>
+					<button class="btn btn-operador" onclick="definirOperacao('-')">−</button>
+
+					<button class="btn" onclick="adicionarNumero('1')">1</button>
+					<button class="btn" onclick="adicionarNumero('2')">2</button>
+					<button class="btn" onclick="adicionarNumero('3')">3</button>
+					<button class="btn btn-operador" onclick="definirOperacao('+')">+</button>
+
+					<button class="btn btn-zero" onclick="adicionarNumero('0')">0</button>
+					<button class="btn" onclick="adicionarNumero('.')">.</button>
+					<button class="btn btn-igual" onclick="calcular()">=</button>
+				</div>
+			</div>
+
+			<div class="historico">
+				<h3>Histórico</h3>
+				<div id="historico-lista" class="historico-lista">
+					<p class="historico-vazio">Nenhum cálculo ainda</p>
+				</div>
+				<button class="btn-limpar-historico" onclick="limparHistorico()">
+					Limpar Histórico
+				</button>
+			</div>
+		</div>
+
+		<script src="script.js"></script>
+	</body>
+</html>
